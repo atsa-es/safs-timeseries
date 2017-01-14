@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#\n# This is an example function named 'hello'\n\n#' fit_stan is the primary function which calls pre-written stan scripts for time series data.\n#'\n#' @param y The response variable (numeric)\n#' @param x The predictors, either a vector or matrix\n#' @param model_name The specific name of the model to be fitted. Currently supported are 'regression', 'ar', 'rw' and 'ma1'.\n#' @param est_drift Whether or not to estimate a drift parameter (default = FALSE). Only applicable to the rw and ar models.\n#' @param P The order of the ar model, with minimum value = 1 (default). MA orders > 2 haven't been built in yet.\n#' @param mcmc_list A list of MCMC control parameters. These include the number of 'iterations' (default = 1000), burn in or warmup (default = 500), chains (default = 3), and thinning (default = 1)\n#'\n#' @return an object of class 'rstan'\n#' @export\n#'\n#' @examples\nfit_stan <- function(y, x, model_name = NA, est_drift = FALSE, P = 1, mcmc_list = list(n_mcmc = 1000, n_burn = 500, n_chain = 3, n_thin = 1)) {\n  if(model_name == \"regression\") {\n    if(class(x)!=\"matrix\") x = matrix(x,ncol=1)\n    mod = stan(\"exec/regression.stan\", data = list(\"x\"=x,\"y\"=y,\"N\"=length(y),\"K\"=dim(x)[2]),\n      pars = c(\"beta\",\"sigma\",\"pred\"), chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)\n  }\n  if(model_name == \"rw\" & est_drift == FALSE) {\n    mod = stan(\"exec/rw.stan\", data = list(\"y\"=y,\"N\"=length(y)), pars = c(\"sigma\",\"pred\"),\n      chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)\n  }\n  if(model_name == \"rw\" & est_drift == TRUE) {\n    mod = stan(\"exec/rw_drift.stan\", data = list(\"y\"=y,\"N\"=length(y)), pars = c(\"sigma\",\"pred\",\"mu\"),\n      chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)\n  }\n  if(model_name == \"ar\" & est_drift == FALSE) {\n    mod = stan(\"exec/ar.stan\", data = list(\"y\"=y,\"N\"=length(y)), pars = c(\"sigma\",\"pred\",\"phi\"),\n      chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)\n  }\n  if(model_name == \"ar\" & est_drift == TRUE) {\n    mod = stan(\"exec/ar_drift.stan\", data = list(\"y\"=y,\"N\"=length(y)), pars = c(\"sigma\",\"pred\",\"mu\",\"phi\"),\n      chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)\n  }\n  if(model_name == \"ma1\") {\n    mod = stan(\"exec/ma1.stan\", data = list(\"y\"=y,\"N\"=length(y)), pars = c(\"sigma\",\"pred\",\"mu\",\"phi\"),\n      chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)\n  }\n  return(mod)\n}\n",
+    "created" : 1484196411657.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2355099596",
+    "id" : "BC88914F",
+    "lastKnownWriteTime" : 1484425795,
+    "last_content_update" : 1484425795214,
+    "path" : "~/Documents/safs-timeseries/stants/R/fit_stan.R",
+    "project_path" : "R/fit_stan.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

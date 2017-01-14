@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"Lab 2\"\nauthor: \"Eric Ward\"\ndate: \"January 14, 2017\"\noutput: pdf_document\n---\n\n```{r setup, include=FALSE}\nknitr::opts_chunk$set(echo = TRUE)\n```\n\n# Lab 2: Univariate time series models using Bayesian methods\n\nFor this lab, we'll use STAN for estimation (the last several times this course has been taught, we used JAGS or WinBUGS). You'll need to download **rstan** below. Additionally, you'll need to download a package we've created for deploying these models called **stants**. This is hosted on Eric's Github repository, and you can install with **devtools**. \n\n```{r load, warning=FALSE, message=FALSE}\nlibrary(rstan)\nlibrary(devtools)\ndevtools::install_github(\"eric-ward/stants\")\nlibrary(stants)\n```\n\n\n\n\n",
+    "created" : 1484425921702.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1706450146",
+    "id" : "57C83060",
+    "lastKnownWriteTime" : 1484426350,
+    "last_content_update" : 1484426350530,
+    "path" : "~/Documents/safs-timeseries/stants/Lab2.Rmd",
+    "project_path" : "Lab2.Rmd",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
