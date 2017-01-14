@@ -14,10 +14,10 @@
 #' @export
 #'
 #' @examples
-fit_stan <- function(y, x, model_name = NA, est_drift = FALSE, P = 1, mcmc_list = list(n_mcmc = 1000, n_burn = 500, n_chain = 3, n_thin = 1)) {
+fit_stan <- function(y, x=NA, model_name = NA, est_drift = FALSE, P = 1, mcmc_list = list(n_mcmc = 1000, n_burn = 500, n_chain = 3, n_thin = 1)) {
   if(model_name == "regression") {
     if(class(x)!="matrix") x = matrix(x,ncol=1)
-    mod = stan("exec/regression.stan", data = list("x"=x,"y"=y,"N"=length(y),"K"=dim(x)[2]),
+    mod = stan("exec/regression.stan", data = list("N"=length(y),"K"=dim(x)[2],"x"=x,"y"=y),
       pars = c("beta","sigma","pred"), chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
   }
   if(model_name == "rw" & est_drift == FALSE) {
