@@ -1,6 +1,3 @@
-#
-# This is an example function named 'hello'
-
 #' fit_stan is the primary function which calls pre-written stan scripts for time series data.
 #'
 #' @param y The response variable (numeric)
@@ -64,6 +61,10 @@ fit_stan <- function(y, x=NA, model_name = NA, est_drift = FALSE, P = 1, Q = 1, 
   }
   if(model_name == "ss_ar_drift" & est_drift == TRUE) {
     mod = stan("exec/ss_ar_drift.stan", data = list("y"=y,"N"=length(y)), pars = c("sigma_process","pred", "sigma_obs", "mu", "phi"),
+      chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
+  }
+  if(model_name == "arma11") {
+    mod = stan("exec/arma11.stan", data = list("y"=y,"N"=length(y)), pars = c("sigma", "theta", "mu", "phi"),
       chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
   }
   return(mod)
