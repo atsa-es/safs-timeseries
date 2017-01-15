@@ -5,14 +5,14 @@ data {
   vector[N] y;
 }
 parameters {
-  real alpha;
   vector[K] beta;
   real<lower=0> sigma;
 }
 transformed parameters {
   vector[N] pred;
-  pred = x * beta + alpha;
+  pred = x * beta;
 }
 model {
+  beta ~ normal(0,2);
   y ~ normal(pred, sigma);
 }

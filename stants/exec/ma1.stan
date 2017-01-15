@@ -1,25 +1,27 @@
 data {
-  int<lower=1> N; // num observations
-  real y[T]; // observed outputs
+  int<lower=2> N;  // number of observations
+  vector[N] y;     // observation at time T
 }
 parameters {
-  real mu; // mean coeff
-  real theta; // moving avg coeff
-  real<lower=0> sigma; // noise scale
+  real mu;              // mean
+  real<lower=0> sigma;  // error scale
+  real theta;      // lag coefficients
 }
-model {
-  vector[N] pred; // prediction for time t
-  vector[N] err; // error for time t
-  pred[1] = mu + phi * mu; // assume err[0] == 0
-  err[1] = y[1] - pred[1];
+transformed parameters {
+  vector[N] epsilon;    // error terms
+  vector[N] pred;    // predictions
+  epsilon[1] = y[1] - mu;
+  pred[1] = y[1];
   for (t in 2:N) {
-    pred[t] = mu + theta * err[t-1];
-    err[t] = y[t] - pred[t];
+    epsilon[t] = (y[t] - mu - theta * epsilon[t - 1]);
+    pred[t] = mu + theta * epsilon[t - 1];
   }
 }
-
-mu ~ normal(0, 10); // priors
-theta ~ normal(0, 2);
-sigma ~ cauchy(0, 5);
-err ~ normal(0, sigma);
+model {
+  mu ~ cauchy(0, 2.5);
+  theta ~ cauchy(0, 2.5);
+  sigma ~ cauchy(0, 2.5);
+  for (t in 2:N) {
+    y[t] ~ normal(pred[t],sigma);
+  }
 }
