@@ -12,7 +12,7 @@
 #' @export
 #'
 #' @examples
-fit_stan <- function(y, x=NA, model_name = NA, est_drift = FALSE, P = 1, Q = 1, mcmc_list = list(n_mcmc = 1000, n_burn = 500, n_chain = 3, n_thin = 1)) {
+fit_stan <- function(y, x=NA, model_name = NA, est_drift = FALSE, eat_mean = FALSE, P = 1, Q = 1, mcmc_list = list(n_mcmc = 1000, n_burn = 500, n_chain = 3, n_thin = 1)) {
   if(model_name == "regression") {
     if(class(x)!="matrix") x = matrix(x,ncol=1)
     mod = stan("exec/regression.stan", data = list("N"=length(y),"K"=dim(x)[2],"x"=x,"y"=y),
@@ -61,6 +61,10 @@ fit_stan <- function(y, x=NA, model_name = NA, est_drift = FALSE, P = 1, Q = 1, 
   }
   if(model_name == "ss_ar" & est_drift == TRUE) {
     mod = stan("exec/ss_ar_drift.stan", data = list("y"=y,"N"=length(y)), pars = c("sigma_process","pred", "sigma_obs", "mu", "phi"),
+      chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
+  }
+  if(model_name == "ss_ar" & est_mean == TRUE) {
+    mod = stan("exec/ss_ar_mean.stan", data = list("y"=y,"N"=length(y)), pars = c("sigma_process","pred", "sigma_obs", "mu", "phi"),
       chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
   }
   if(model_name == "arma11") {
