@@ -24,5 +24,7 @@ transformed parameters {
 model {
   phi ~ normal(0,1);
   beta ~ normal(0,2);
+  sigma ~ cauchy(0,5);
   y ~ normal(pred, sigma_cor);
 }
+

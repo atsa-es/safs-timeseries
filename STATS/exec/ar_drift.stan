@@ -5,7 +5,7 @@ data {
 }
 parameters {
   real<lower=0> sigma;  // outcome noise
-  real phi[P];
+  real<lower=-0.999,upper=0.999> phi[P];
   real mu;
 }
 transformed parameters {
@@ -26,3 +26,4 @@ model {
   phi ~ normal(0,1);
   mu ~ normal(0,1);
 }
+

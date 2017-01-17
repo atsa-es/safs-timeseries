@@ -14,5 +14,7 @@ transformed parameters {
 }
 model {
   beta ~ normal(0,2);
+  sigma ~ cauchy(0, 5);
   y ~ normal(pred, sigma);
 }
+

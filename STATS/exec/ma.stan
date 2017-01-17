@@ -28,3 +28,4 @@ model {
   sigma ~ cauchy(0, 2.5);
   y ~ normal(pred, sigma);
 }
+

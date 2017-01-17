@@ -51,7 +51,7 @@ fit_stan <- function(y, x=NA, model_name = NA, est_drift = FALSE, P = 1, Q = 1, 
     mod = stan("exec/ss_rw.stan", data = list("y"=y,"N"=length(y)), pars = c("sigma_process","pred", "sigma_obs"),
       chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
   }
-  if(model_name == "ss_rw_drift" & est_drift == TRUE) {
+  if(model_name == "ss_rw" & est_drift == TRUE) {
     mod = stan("exec/ss_rw_drift.stan", data = list("y"=y,"N"=length(y)), pars = c("sigma_process","pred", "sigma_obs", "mu"),
       chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
   }
@@ -59,7 +59,7 @@ fit_stan <- function(y, x=NA, model_name = NA, est_drift = FALSE, P = 1, Q = 1, 
     mod = stan("exec/ss_ar.stan", data = list("y"=y,"N"=length(y)), pars = c("sigma_process","pred", "sigma_obs", "phi"),
       chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
   }
-  if(model_name == "ss_ar_drift" & est_drift == TRUE) {
+  if(model_name == "ss_ar" & est_drift == TRUE) {
     mod = stan("exec/ss_ar_drift.stan", data = list("y"=y,"N"=length(y)), pars = c("sigma_process","pred", "sigma_obs", "mu", "phi"),
       chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
   }

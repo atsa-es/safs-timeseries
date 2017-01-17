@@ -4,7 +4,7 @@ data {
 }
 parameters {
   real x0;
-  real phi;
+  real<lower=-0.999,upper=0.999> phi;
   vector[N-1] pro_dev;
   real<lower=0> sigma_process;
   real<lower=0> sigma_obs;

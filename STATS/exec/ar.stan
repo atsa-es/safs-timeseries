@@ -5,7 +5,7 @@ data {
 }
 parameters {
   real<lower=0> sigma;  // outcome noise
-  real phi[P];
+  real<lower=-0.999,upper=0.999> phi[P];
 }
 transformed parameters {
   real pred[N];
