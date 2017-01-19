@@ -13,7 +13,7 @@
 #'
 #' @examples
 fit_stan <- function(y, x=NA, model_name = NA, est_drift = FALSE, est_mean = FALSE, P = 1, Q = 1, mcmc_list = list(n_mcmc = 1000, n_burn = 500, n_chain = 3, n_thin = 1)) {
-  stan_dir = find.package("STATS")
+  stan_dir = find.package("statss")
   if(model_name == "regression") {
     if(class(x)!="matrix") x = matrix(x,ncol=1)
     mod = stan(paste0(stan_dir, "/exec/regression.stan"), data = list("N"=length(y),"K"=dim(x)[2],"x"=x,"y"=y),
