@@ -9,7 +9,7 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Lab 3
+# Lab 3 for FISH 507
 
 ## Installing packages
 For this lab, we'll use [Stan](http://mc-stan.org/documentation/) for estimation (the last several times this course has been taught, we used JAGS or WinBUGS). You'll need to download Stan below. Additionally, you'll need to download a package we've created for deploying these models called *statss*. This is hosted on the Github repository for the class [https://github.com/eric-ward/safs-timeseries](https://github.com/eric-ward/safs-timeseries), and you can install with *devtools*. These examples are primarily drawn from the *Stan* manual and previous code from this class.
