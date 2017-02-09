@@ -2,7 +2,7 @@ Package: statss
 Type: Package
 Title: This Package Fits Stan Routines To Univariate And Multivariate Time Series (STan Analysis of Time SerieS)
 Version: 0.1.0
-Author: Eric Ward
+Author: Eric Ward, Eli Holmes, Mark Scheuerell
 Maintainer: The package maintainer <eric.ward@noaa.gov>
 Description: Bundles univarate and multivariate STAN scripts for FISH 507 class.
 License:  GPL (>=3)
