@@ -2,28 +2,31 @@
 % Please edit documentation in R/fit_stan.R
 \name{fit_stan}
 \alias{fit_stan}
-\title{Fit Stan model to data, return stanfit object}
+\title{fit_stan is the primary function which calls pre-written stan scripts for time series data.}
 \usage{
-function(y, x=NA, model_name = NA, est_drift = FALSE, P = 1, Q = 1, mcmc_list = list(n_mcmc = 1000, n_burn = 500, n_chain = 3, n_thin = 1), ...)
+fit_stan(y, x = NA, model_name = NA, est_drift = FALSE,
+  est_mean = FALSE, P = 1, Q = 1, mcmc_list = list(n_mcmc = 1000, n_burn
+  = 500, n_chain = 3, n_thin = 1))
 }
 \arguments{
-\item{y}{The response data}
+\item{y}{The response variable (numeric)}
 
-\item{x}{An optional vector or matrix (regression only) of data}
+\item{x}{The predictors, either a vector or matrix}
 
-\item{model_name}{The type of model to be fit; options include 'regression', 'ar', 'rw', 'ma', 'ss_ar' (state space univariate AR), or 'ss_rw' (state space univariate random walk)}
+\item{model_name}{The specific name of the model to be fitted. Currently supported are 'regression', 'ar', 'rw', 'ma', 'ss_ar' (state space univariate AR), or 'ss_rw' (state space univariate random walk).}
 
-\item{est_drift}{Whether or not the mean or drift term is estimated (not applicable for regression)}
+\item{est_drift}{Whether or not to estimate a drift parameter (default = FALSE). Only applicable to the rw and ar models.}
 
-\item{P}{Degreee of AR process, minimum = 1 (default)}
+\item{P}{The order of the ar model, with minimum value = 1 (default).}
 
-\item{Q}{Degreee of MA process, minimum = 1 (default)}
+\item{Q}{The order of the ma model, with minimum value = 1 (default).}
 
-\item{mcmc_list}{List controlling the MCMC parameters; includes n_mcmc (chain length, defaults to 1000), n_burn (burn-in, defaults to 500), n_chain = 3 (number of chains),
-n_thin = 1 (thinning rate)}
-
+\item{mcmc_list}{A list of MCMC control parameters. These include the number of 'iterations' (default = 1000), burn in or warmup (default = 500), chains (default = 3), and thinning (default = 1)}
+}
+\value{
+an object of class 'rstan'
 }
 \description{
-Fit a Stan model and return output for all parameters, including predicted values.
+fit_stan is the primary function which calls pre-written stan scripts for time series data.
 }
 

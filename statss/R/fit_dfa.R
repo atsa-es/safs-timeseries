@@ -1,4 +1,18 @@
-fit_dfa = function(y = y, 
+#' fit_dfa is the primary function for fitting dynamic factor analysis to time series data.
+#'
+#' @param y The response variable (numeric matrix)
+#' @param covar The optional matrix of covariates (time on columns)
+#' @param covar_index The matrix of index values, indicating which covariate effects on time series are shared. 
+#' @param num_trends The number of DFA trends (random walks) to estimate. Process variance fixed at 1.
+#' @param varIndx The vector indicating which time series share variances. By default, (1,2,3,...,n)
+#' @param zscore Whether or not to z-score data. Defaults to true.
+#' @param iter Number of MCMC iterations, defaults to 4000.
+#' @param control Default control list for stanfit objects.
+#'
+#' @return an object of class 'rstan'
+#' @export
+#'
+fit_dfa <- function(y = y, 
   covar=NULL,
   covar_index=NULL,
   num_trends = 2,
@@ -99,4 +113,5 @@ fit_dfa = function(y = y,
     iter = iter,
     control = control
   )
+  return(mod)
 }

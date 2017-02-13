@@ -52,7 +52,7 @@ transformed parameters {
   # N is sample size, P = time series, K = number trends
   # [PxN] = [PxK] * [KxN]
   if(num_covar==0) pred = Z * x;
-  if(num_covar > 0) pred = Z*x + D*d;
+  if(num_covar > 0) pred = Z*x + D*d_covar;
 }
 model {
   # initial state for each trend
@@ -64,6 +64,9 @@ model {
   }
   # prior on loadings
   z ~ normal(0, 1);
+  
+  # prior on covariate effects.
+  if(num_covar > 0) d ~ normal(0,1);
   
   # observation variance
   for(i in 1:nVariances) {
