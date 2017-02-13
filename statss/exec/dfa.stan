@@ -13,16 +13,32 @@ data {
   int<lower=0> n_pos;
   real y[n_pos]; # vectorized matrix of observations  
   int<lower=0> row_indx_pos[n_pos];
-  int<lower=0> col_indx_pos[n_pos];  
+  int<lower=0> col_indx_pos[n_pos];
+  int<lower=0> num_covar; # number of unique covariates
+  int<lower=0> num_unique_covar; # number of covar parameters to estimate
+  matrix[num_covar,N] d_covar; # inputted covariate matrix
+  int covar_indexing[P,num_covar]; # index of covariates to estimate
 }
 parameters {
   matrix[K,N] x; #vector[N] x[P]; # random walk-trends
   vector[nZ] z; # estimated loadings in vec form
   real<lower=0> sigma[nVariances];
+  vector[num_unique_covar] d;
 }
 transformed parameters {
   matrix[P,N] pred; #vector[P] pred[N];
+  matrix[P,num_covar] D;
   matrix[P,K] Z;
+  
+  # fill in D matrix to allow for shared parameters
+  if(num_covar > 0) {
+   for(i in 1:P) {
+    for(j in 1:num_covar) {
+      D[i,j] = d[covar_indexing[i,j]];
+    }
+   }
+  }
+  
   for(i in 1:nZ) {
     Z[row_indx[i],col_indx[i]] = z[i];
   }
@@ -35,7 +51,8 @@ transformed parameters {
   
   # N is sample size, P = time series, K = number trends
   # [PxN] = [PxK] * [KxN]
-  pred = Z * x;
+  if(num_covar==0) pred = Z * x;
+  if(num_covar > 0) pred = Z*x + D*d;
 }
 model {
   # initial state for each trend

@@ -1,16 +1,35 @@
-fit_dfa = function(y = y,
+fit_dfa = function(y = y, 
+  covar=NULL,
+  covar_index=NULL,
   num_trends = 2,
   varIndx = NULL,
   zscore = TRUE,
   iter = 4000,
   chains = 1,
-  control = list(adapt_delta = 0.99),
-  model = c("dfa.stan", "tvdfa.stan")) {
+  control = list(adapt_delta = 0.99)) {
+  
+  stan_dir = find.package("statss")
+  model = paste0(stan_dir, "/exec/dfa.stan")
+  
   # parameters for DFA
   N = ncol(y)
   P = nrow(y)
   K = num_trends # number of dfa trends
   nZ = P * K - sum(1:K) + K
+  d_covar = covar;
+  num_covar = nrow(d_covar); 
+  covar_indexing = covar_index;
+  num_unique_covar = max(covar_indexing);
+  if(!is.null(d_covar) & is.null(covar_indexing)) {
+    # covariates included but index matrix not, assume independent for all elements
+    covar_indexing = matrix(seq(1,num_covar*P),P,num_covar)
+  }
+  if(is.null(d_covar)) {
+    covar_indexing = matrix(0,P,0);
+    d_covar = matrix(0,0,N);
+    num_covar = 0;
+    num_unique_covar = 0;
+  }
   
   if (zscore == TRUE) {
     for (i in 1:P) {
@@ -64,10 +83,14 @@ fit_dfa = function(y = y,
     col_indx_z,
     row_indx_pos,
     col_indx_pos,
-    n_pos
+    n_pos,
+    d_covar,
+    num_covar,
+    covar_indexing,
+    num_unique_covar
   )
   pars <- c("x", "Z", "sigma", "log_lik")
-  if (model[[1]] == "tvdfa.stan") pars <- c(pars, "tau")
+  
   mod = stan(
     data = data_list,
     pars = pars,
