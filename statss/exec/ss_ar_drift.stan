@@ -26,3 +26,8 @@ model {
   pro_dev ~ normal(0, sigma_process);
   y ~ normal(pred, sigma_obs);
 }
+generated quantities {
+  vector[N] log_lik;
+  # regresssion example in loo() package 
+  for (n in 1:N) log_lik[n] = normal_lpdf(y[n] | pred[n], sigma_obs);
+}

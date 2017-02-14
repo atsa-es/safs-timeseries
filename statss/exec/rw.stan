@@ -16,3 +16,8 @@ model {
   y[2:N] ~ normal(pred[2:N], sigma);
   sigma ~ cauchy(0, 5);
 }
+generated quantities {
+  vector[N-1] log_lik;
+  # regresssion example in loo() package 
+  for (n in 2:N) log_lik[n-1] = normal_lpdf(y[n] | pred[n], sigma);
+}

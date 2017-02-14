@@ -53,7 +53,8 @@ x = model.matrix(lm(Temp~1))
 Fitting the model using our function is done with this code, 
 
 ```{r, warning=FALSE, message=FALSE, results='hide'}
-lm_intercept = fit_stan(y = as.numeric(Temp), x = rep(1, length(Temp)),
+x = model.matrix(lm(Nile~1))
+lm_intercept = fit_stan(y = as.numeric(Nile), x = rep(1, length(Nile)),
   model_name = "regression")
 ```
 
@@ -161,4 +162,16 @@ ss_ar = fit_stan(y = Temp, est_drift=FALSE, model_name = "ss_ar")
 ss_rw = fit_stan(y = Temp, est_drift=FALSE, model_name = "ss_rw")
 ```
 
+coef = broom::tidy(ss_ar)
+coef = coef[grep("pred", coef$term),]
+plot(1:length(Temp), coef$estimate,col="black", ylab="Fit", type="l", lwd=2, ylim = c(55,100), main="AR model", xlab="")
+lines(1:length(Temp), coef$estimate+coef$std.error)
+lines(1:length(Temp), coef$estimate-coef$std.error)
 
+coef = broom::tidy(ss_rw)
+coef = coef[grep("pred", coef$term),]
+lines(1:length(Temp), coef$estimate, col="blue", lwd=2)
+lines(1:length(Temp), coef$estimate+coef$std.error, col="blue")
+lines(1:length(Temp), coef$estimate-coef$std.error, col="blue")
+
+points(Temp, col="red")

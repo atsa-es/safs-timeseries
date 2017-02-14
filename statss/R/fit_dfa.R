@@ -103,7 +103,7 @@ fit_dfa <- function(y = y,
     covar_indexing,
     num_unique_covar
   )
-  pars <- c("x", "Z", "sigma", "log_lik")
+  pars <- c("x", "Z", "sigma", "log_lik", "pred")
   
   mod = stan(
     data = data_list,
