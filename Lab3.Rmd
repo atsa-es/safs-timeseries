@@ -175,3 +175,12 @@ lines(1:length(Temp), coef$estimate+coef$std.error, col="blue")
 lines(1:length(Temp), coef$estimate-coef$std.error, col="blue")
 
 points(Temp, col="red")
+
+
+data(SalmonSurvCUI)
+mod = fit_stan(y = SalmonSurvCUI$logit.s, x = model.matrix(lm(SalmonSurvCUI$logit.s ~ SalmonSurvCUI$CUI.apr)), model_name="dlm")
+
+plot(mean, type="l", lwd=3, ylim=c(-9,-1), ylab="Predictions", xlab="")
+lines(lower)
+lines(upper)
+points(y,col="red")

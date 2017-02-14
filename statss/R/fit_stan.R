@@ -71,5 +71,29 @@ fit_stan <- function(y, x=NA, model_name = NA, est_drift = FALSE, est_mean = FAL
     mod = stan(paste0(stan_dir,"/exec/arma11.stan"), data = list("y"=y,"N"=length(y)), pars = c("sigma", "theta", "mu", "phi"),
       chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
   }
+  if(model_name == "dlm-intercept") {
+    # constant slope, and time -varying intercept model
+    if(is.na(x)) {
+      x = matrix(0, nrow=length(y), ncol=1)
+    } 
+    if(class(x)!="matrix") x = matrix(x,ncol=1)
+
+    mod = stan(paste0(stan_dir, "/exec/dlm_int.stan"), data = list("N"=length(y),"K"=dim(x)[2],"x"=x,"y"=y),
+      pars = c("beta","sigma_obs","sigma_process","pred","intercept"), chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
+  }  
+  if(model_name == "dlm-slope") {
+    # constant estimated intercept, and time varying slopes
+    if(class(x)!="matrix") x = matrix(x,ncol=1)
+    
+    mod = stan(paste0(stan_dir, "/exec/dlm_slope.stan"), data = list("N"=length(y),"K"=dim(x)[2],"x"=x,"y"=y),
+      pars = c("beta","sigma_obs","sigma_process","pred"), chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
+  }    
+  if(model_name == "dlm") {
+    # this is just a time-varying model with time varying intercept and slopes
+    if(class(x)!="matrix") x = matrix(x,ncol=1)
+    
+    mod = stan(paste0(stan_dir, "/exec/dlm.stan"), data = list("N"=length(y),"K"=dim(x)[2],"x"=x,"y"=y),
+      pars = c("beta","sigma_obs","sigma_process","pred"), chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
+  }      
   return(mod)
 }
