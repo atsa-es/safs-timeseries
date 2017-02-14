@@ -2,3 +2,4 @@
 
 export(fit_dfa)
 export(fit_stan)
+export(rotate_trends)

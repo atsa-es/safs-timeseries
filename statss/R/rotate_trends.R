@@ -1,5 +1,11 @@
+#' rotate_trends is the primary function which calls pre-written stan scripts for time series data.
+#'
+#' @param fitted_model A fitted stanfit object
+#' 
+#' @return a list object, with the rotated trends for each MCMC chain, along with the mean and 95% CIs
+#' @export
+#'
 rotate_trends = function(fitted_model) {
-  
   # Illustrate how to get the trends out of the model
   # get the inverse of the rotation matrix
   n_mcmc = dim(extract(fitted_model)$Z)[1]
