@@ -10,7 +10,7 @@ rotate_trends(fitted_model)
 \item{fitted_model}{A fitted stanfit object}
 }
 \value{
-a list object, with the rotated trends for each MCMC chain, along with the mean and 95% CIs
+a list object, with the rotated trends for each MCMC chain (trends), rotated Z for every MCMC chain (Z_rot), mean Z (Z_rot_mean), mean trends (trends_mean), lower 2.5% interval on trends (trends_lower), upper 97.5% interval for trends (trends_upper)
 }
 \description{
 rotate_trends is the primary function which calls pre-written stan scripts for time series data.

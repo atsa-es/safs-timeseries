@@ -18,3 +18,4 @@
 # Illustrate how to get trends 
 #rotated1 = rotate_trends(fit2)
 #matplot(rotated1$trends)
+

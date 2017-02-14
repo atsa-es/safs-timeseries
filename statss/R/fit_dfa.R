@@ -31,18 +31,18 @@ fit_dfa <- function(y = y,
   K = num_trends # number of dfa trends
   nZ = P * K - sum(1:K) + K
   d_covar = covar;
-  num_covar = nrow(d_covar); 
-  covar_indexing = covar_index;
-  num_unique_covar = max(covar_indexing);
+  num_covar = nrow(d_covar)
+  covar_indexing = covar_index
   if(!is.null(d_covar) & is.null(covar_indexing)) {
     # covariates included but index matrix not, assume independent for all elements
     covar_indexing = matrix(seq(1,num_covar*P),P,num_covar)
+    num_unique_covar = max(covar_indexing)
   }
   if(is.null(d_covar)) {
-    covar_indexing = matrix(0,P,0);
-    d_covar = matrix(0,0,N);
-    num_covar = 0;
-    num_unique_covar = 0;
+    covar_indexing = matrix(0,P,0)
+    d_covar = matrix(0,0,N)
+    num_covar = 0
+    num_unique_covar = 0
   }
   
   if (zscore == TRUE) {
