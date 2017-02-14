@@ -94,6 +94,29 @@ fit_stan <- function(y, x=NA, model_name = NA, est_drift = FALSE, est_mean = FAL
     
     mod = stan(paste0(stan_dir, "/exec/dlm.stan"), data = list("N"=length(y),"K"=dim(x)[2],"x"=x,"y"=y),
       pars = c("beta","sigma_obs","sigma_process","pred"), chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
+  }     
+  if(model_name == "marss") {
+    states = c(1,2,1,2,1)
+    obsVariances = rep(1, ncol(y))
+    proVariances = c(1,1)
+    trends = c(1,1)
+    N = nrow(y)
+    M = ncol(y)
+    row_indx_pos = matrix((rep(1:M, N)), M, N)[which(!is.na(y))]
+    col_indx_pos = matrix(sort(rep(1:N, M)), M, N)[which(!is.na(y))]
+    n_pos = length(row_indx_pos)
+    
+    mod = stan(paste0(stan_dir, "/exec/marss.stan"), 
+      data = list("N"=nrow(y),"M"=ncol(y), "y"=y,
+      "states"=states, "S" = max(states), "obsVariances"=obsVariances,
+      "n_obsvar" = max(obsVariances), "proVariances" = proVariances, 
+        "n_provar" = max(proVariances),
+      "trends"=trends, "n_trends" = max(trends),
+        "n_pos" = n_pos,
+        "col_indx_pos" = col_indx_pos,
+        "row_indx_pos" = row_indx_pos),
+      pars = c("pred"), chains = mcmc_list$n_chain, 
+      iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
   }      
   return(mod)
 }
