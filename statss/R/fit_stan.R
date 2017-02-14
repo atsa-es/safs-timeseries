@@ -97,14 +97,15 @@ fit_stan <- function(y, x=NA, model_name = NA, est_drift = FALSE, est_mean = FAL
   }     
   if(model_name == "marss") {
     states = c(1,2,1,2,1)
-    obsVariances = rep(1, ncol(y))
+    obsVariances = rep(1, nrow(y))
     proVariances = c(1,1)
     trends = c(1,1)
-    N = nrow(y)
-    M = ncol(y)
+    N = ncol(y)
+    M = nrow(y)
     row_indx_pos = matrix((rep(1:M, N)), M, N)[which(!is.na(y))]
     col_indx_pos = matrix(sort(rep(1:N, M)), M, N)[which(!is.na(y))]
     n_pos = length(row_indx_pos)
+    y = y[which(!is.na(y))]
     
     mod = stan(paste0(stan_dir, "/exec/marss.stan"), 
       data = list("N"=nrow(y),"M"=ncol(y), "y"=y,

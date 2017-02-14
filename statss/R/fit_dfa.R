@@ -104,7 +104,7 @@ fit_dfa <- function(y = y,
     num_unique_covar
   )
   pars <- c("x", "Z", "sigma", "log_lik", "pred")
-  
+  if(!is.null(covar)) pars = c(pars, "D")
   mod = stan(
     data = data_list,
     pars = pars,
