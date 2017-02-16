@@ -13,6 +13,8 @@ data {
   int<lower=0> col_indx_pos[n_pos];
   int<lower=0> row_indx_pos[n_pos];
   vector[n_pos] y; # data
+  int y_int[N];
+  int family; # 1 = normal, 2 = binomial, 3 = poisson, 4 = gamma, 5 = lognormal  
 }
 parameters {
   vector[S] x0; # initial states
@@ -55,6 +57,19 @@ model {
   
   # likelihood
   for(i in 1:n_pos) {
-    y[i] ~ normal(pred[col_indx_pos[i], row_indx_pos[i]], sigma_obs[obsVariances[row_indx_pos[i]]]);
+    if(family==1) y[i] ~ normal(pred[col_indx_pos[i], row_indx_pos[i]], sigma_obs[obsVariances[row_indx_pos[i]]]);
+    if(family==2) y_int[i] ~ bernoulli_logit(pred[col_indx_pos[i], row_indx_pos[i]]);
+    if(family==3) y_int[i] ~ poisson_log(pred[col_indx_pos[i], row_indx_pos[i]]);
+    if(family==4) y[i] ~ gamma(sigma_obs[obsVariances[row_indx_pos[i]]], sigma_obs[obsVariances[row_indx_pos[i]]] ./ pred[col_indx_pos[i], row_indx_pos[i]]);        
+    if(family==5) y[i] ~ lognormal(pred[col_indx_pos[i], row_indx_pos[i]], sigma_obs[obsVariances[row_indx_pos[i]]]);  
   }
+}
+generated quantities {
+  vector[N] log_lik;
+  # regresssion example in loo() package 
+  if(family==1) for (n in 1:N) log_lik[n] = normal_lpdf(y[n] | pred[col_indx_pos[n], row_indx_pos[n]], sigma_obs[obsVariances[row_indx_pos[n]]]);
+  if(family==2) for (n in 1:N) log_lik[n] = bernoulli_lpmf(y_int[n] | inv_logit(pred[col_indx_pos[n], row_indx_pos[n]]));
+  if(family==3) for (n in 1:N) log_lik[n] = poisson_lpmf(y_int[n] | exp(pred[col_indx_pos[n], row_indx_pos[n]]));
+  if(family==4) for (n in 1:N) log_lik[n] = gamma_lpdf(y[n] | sigma_obs[obsVariances[row_indx_pos[n]]], sigma_obs[obsVariances[row_indx_pos[n]]] ./ exp(pred[col_indx_pos[n], row_indx_pos[n]]));
+  if(family==5) for (n in 1:N) log_lik[n] = lognormal_lpdf(y[n] | pred[col_indx_pos[n], row_indx_pos[n]], sigma_obs[obsVariances[row_indx_pos[n]]]);  
 }

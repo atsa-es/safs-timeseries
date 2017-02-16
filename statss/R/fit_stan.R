@@ -7,21 +7,26 @@
 #' @param P The order of the ar model, with minimum value = 1 (default).
 #' @param Q The order of the ma model, with minimum value = 1 (default).
 #' @param mcmc_list A list of MCMC control parameters. These include the number of 'iterations' (default = 1000), burn in or warmup (default = 500), chains (default = 3), and thinning (default = 1)
-#'
+#' @param family A named distribution for the observation model, defaults to gaussian
+#' 
 #' @return an object of class 'rstan'
 #' @export
 #'
-fit_stan <- function(y, x=NA, model_name = NA, est_drift = FALSE, est_mean = FALSE, P = 1, Q = 1, mcmc_list = list(n_mcmc = 1000, n_burn = 500, n_chain = 3, n_thin = 1)) {
+fit_stan <- function(y, x=NA, model_name = NA, est_drift = FALSE, est_mean = FALSE, P = 1, Q = 1, mcmc_list = list(n_mcmc = 1000, n_burn = 500, n_chain = 3, n_thin = 1), family="gaussian") {
   stan_dir = find.package("statss")
+  
+  dist = c("gaussian", "binomial", "poisson", "gamma", "lognormal")
+  family = which(dist==family)
+  
   if(model_name == "regression") {
     if(class(x)!="matrix") x = matrix(x,ncol=1)
-    mod = stan(paste0(stan_dir, "/exec/regression.stan"), data = list("N"=length(y),"K"=dim(x)[2],"x"=x,"y"=y),
-      pars = c("beta","sigma","pred"), chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
+    mod = stan(paste0(stan_dir, "/exec/regression.stan"), data = list("N"=length(y),"K"=dim(x)[2],"x"=x,"y"=y,"y_int"=round(y), "family"=family),
+      pars = c("beta","sigma","pred","log_lik"), chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
   }
   if(model_name == "regression_cor") {
     if(class(x)!="matrix") x = matrix(x,ncol=1)
-    mod = stan(paste0(stan_dir,"/exec/regression_cor.stan"), data = list("N"=length(y),"K"=dim(x)[2],"x"=x,"y"=y),
-      pars = c("beta","sigma","pred","phi","sigma_cor"), chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
+    mod = stan(paste0(stan_dir,"/exec/regression_cor.stan"), data = list("N"=length(y),"K"=dim(x)[2],"x"=x,"y"=y,"y_int"=round(y), "family"=family),
+      pars = c("beta","sigma","pred","phi","sigma_cor","log_lik"), chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
   }
   if(model_name == "rw" & est_drift == FALSE) {
     mod = stan(paste0(stan_dir,"/exec/rw.stan"), data = list("y"=y,"N"=length(y)), pars = c("sigma","pred"),
@@ -78,22 +83,22 @@ fit_stan <- function(y, x=NA, model_name = NA, est_drift = FALSE, est_mean = FAL
     } 
     if(class(x)!="matrix") x = matrix(x,ncol=1)
 
-    mod = stan(paste0(stan_dir, "/exec/dlm_int.stan"), data = list("N"=length(y),"K"=dim(x)[2],"x"=x,"y"=y),
-      pars = c("beta","sigma_obs","sigma_process","pred","intercept"), chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
+    mod = stan(paste0(stan_dir, "/exec/dlm_int.stan"), data = list("N"=length(y),"K"=dim(x)[2],"x"=x,"y"=y,"y_int"=round(y), "family"=family),
+      pars = c("beta","sigma_obs","sigma_process","pred","intercept","log_lik"), chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
   }  
   if(model_name == "dlm-slope") {
     # constant estimated intercept, and time varying slopes
     if(class(x)!="matrix") x = matrix(x,ncol=1)
     
-    mod = stan(paste0(stan_dir, "/exec/dlm_slope.stan"), data = list("N"=length(y),"K"=dim(x)[2],"x"=x,"y"=y),
-      pars = c("beta","sigma_obs","sigma_process","pred"), chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
+    mod = stan(paste0(stan_dir, "/exec/dlm_slope.stan"), data = list("N"=length(y),"K"=dim(x)[2],"x"=x,"y"=y,"y_int"=round(y), "family"=family),
+      pars = c("beta","sigma_obs","sigma_process","pred","log_lik"), chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
   }    
   if(model_name == "dlm") {
     # this is just a time-varying model with time varying intercept and slopes
     if(class(x)!="matrix") x = matrix(x,ncol=1)
     
-    mod = stan(paste0(stan_dir, "/exec/dlm.stan"), data = list("N"=length(y),"K"=dim(x)[2],"x"=x,"y"=y),
-      pars = c("beta","sigma_obs","sigma_process","pred"), chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
+    mod = stan(paste0(stan_dir, "/exec/dlm.stan"), data = list("N"=length(y),"K"=dim(x)[2],"x"=x,"y"=y,"y_int"=round(y), "family"=family),
+      pars = c("beta","sigma_obs","sigma_process","pred","log_lik"), chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
   }     
   if(model_name == "marss") {
     states = c(1,2,1,2,1)
@@ -115,8 +120,10 @@ fit_stan <- function(y, x=NA, model_name = NA, est_drift = FALSE, est_mean = FAL
       "trends"=trends, "n_trends" = max(trends),
         "n_pos" = n_pos,
         "col_indx_pos" = col_indx_pos,
-        "row_indx_pos" = row_indx_pos),
-      pars = c("pred"), chains = mcmc_list$n_chain, 
+        "row_indx_pos" = row_indx_pos,
+        "y_int"=round(y), 
+        "family"=family),
+      pars = c("pred","log_lik"), chains = mcmc_list$n_chain, 
       iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
   }      
   return(mod)
