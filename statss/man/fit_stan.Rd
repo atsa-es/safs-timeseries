@@ -6,7 +6,8 @@
 \usage{
 fit_stan(y, x = NA, model_name = NA, est_drift = FALSE,
   est_mean = FALSE, P = 1, Q = 1, mcmc_list = list(n_mcmc = 1000, n_burn
-  = 500, n_chain = 3, n_thin = 1), family = "gaussian")
+  = 500, n_chain = 3, n_thin = 1), family = "gaussian", marss = list(states
+  = NULL, obsVariances = NULL, proVariances = NULL, trends = NULL))
 }
 \arguments{
 \item{y}{The response variable (numeric)}
@@ -24,6 +25,8 @@ fit_stan(y, x = NA, model_name = NA, est_drift = FALSE,
 \item{mcmc_list}{A list of MCMC control parameters. These include the number of 'iterations' (default = 1000), burn in or warmup (default = 500), chains (default = 3), and thinning (default = 1)}
 
 \item{family}{A named distribution for the observation model, defaults to gaussian}
+
+\item{marss}{A named list containing the following elements for specifying marss models: (states=NULL, obsVariances=NULL, proVariances=NULL, trends=NULL)}
 }
 \value{
 an object of class 'rstan'

@@ -8,11 +8,12 @@
 #' @param Q The order of the ma model, with minimum value = 1 (default).
 #' @param mcmc_list A list of MCMC control parameters. These include the number of 'iterations' (default = 1000), burn in or warmup (default = 500), chains (default = 3), and thinning (default = 1)
 #' @param family A named distribution for the observation model, defaults to gaussian
+#' @param marss A named list containing the following elements for specifying marss models: (states=NULL, obsVariances=NULL, proVariances=NULL, trends=NULL)
 #' 
 #' @return an object of class 'rstan'
 #' @export
 #'
-fit_stan <- function(y, x=NA, model_name = NA, est_drift = FALSE, est_mean = FALSE, P = 1, Q = 1, mcmc_list = list(n_mcmc = 1000, n_burn = 500, n_chain = 3, n_thin = 1), family="gaussian") {
+fit_stan <- function(y, x=NA, model_name = NA, est_drift = FALSE, est_mean = FALSE, P = 1, Q = 1, mcmc_list = list(n_mcmc = 1000, n_burn = 500, n_chain = 3, n_thin = 1), family="gaussian", marss = list(states=NULL, obsVariances=NULL, proVariances=NULL, trends=NULL)) {
   stan_dir = find.package("statss")
   
   dist = c("gaussian", "binomial", "poisson", "gamma", "lognormal")
@@ -101,10 +102,12 @@ fit_stan <- function(y, x=NA, model_name = NA, est_drift = FALSE, est_mean = FAL
       pars = c("beta","sigma_obs","sigma_process","pred","log_lik"), chains = mcmc_list$n_chain, iter = mcmc_list$n_mcmc, thin = mcmc_list$n_thin)
   }     
   if(model_name == "marss") {
-    states = c(1,2,1,2,1)
-    obsVariances = rep(1, nrow(y))
-    proVariances = c(1,1)
-    trends = c(1,1)
+    if(is.null(marss$states)) states = rep(1, nrow(y))
+    if(is.null(marss$obsVariances)) obsVariances = rep(1, nrow(y))
+    if(is.null(marss$proVariances)) proVariances = 1
+    if(is.null(marss$trends)) trends = 1
+    proVariances = c(proVariances, 0) # to keep types in stan constant
+    trends = c(trends, 0)     # to keep types in stan constant
     N = ncol(y)
     M = nrow(y)
     row_indx_pos = matrix((rep(1:M, N)), M, N)[which(!is.na(y))]

@@ -5,15 +5,15 @@ data {
   int<lower=0> S; # number of states
   int<lower=0> obsVariances[M];
   int<lower=0> n_obsvar;
-  int<lower=0> proVariances[S];
+  int<lower=0> proVariances[S+1];
   int<lower=0> n_provar;  
-  int<lower=0> trends[S];
+  int<lower=0> trends[S+1];
   int<lower=0> n_trends;
   int<lower=0> n_pos; # number of non-NA values
   int<lower=0> col_indx_pos[n_pos];
   int<lower=0> row_indx_pos[n_pos];
   vector[n_pos] y; # data
-  int y_int[N];
+  int y_int[n_pos];
   int family; # 1 = normal, 2 = binomial, 3 = poisson, 4 = gamma, 5 = lognormal  
 }
 parameters {
