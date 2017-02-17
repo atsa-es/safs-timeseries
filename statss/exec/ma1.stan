@@ -25,4 +25,3 @@ model {
     y[t] ~ normal(pred[t],sigma);
   }
 }
-
