@@ -52,7 +52,7 @@ transformed parameters {
   # N is sample size, P = time series, K = number trends
   # [PxN] = [PxK] * [KxN]
   if(num_covar==0) pred = Z * x;
-  if(num_covar > 0) pred = Z*x + D*d_covar;
+  if(num_covar > 0) pred = Z*x + D*d_covar; # D = P x covar, d_covar = covar x N
 }
 model {
   # initial state for each trend

@@ -33,6 +33,9 @@ fit_dfa <- function(y = y,
   d_covar = covar;
   num_covar = nrow(d_covar)
   covar_indexing = covar_index
+  if(!is.null(d_covar) & !is.null(covar_indexing)) {
+    num_unique_covar = max(covar_indexing)
+  } 
   if(!is.null(d_covar) & is.null(covar_indexing)) {
     # covariates included but index matrix not, assume independent for all elements
     covar_indexing = matrix(seq(1,num_covar*P),P,num_covar)
