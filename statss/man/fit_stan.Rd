@@ -18,6 +18,8 @@ fit_stan(y, x = NA, model_name = NA, est_drift = FALSE,
 
 \item{est_drift}{Whether or not to estimate a drift parameter (default = FALSE). Only applicable to the rw and ar models.}
 
+\item{est_mean}{Whether to estimate a mean or not (for state space autoregressive model only)}
+
 \item{P}{The order of the ar model, with minimum value = 1 (default).}
 
 \item{Q}{The order of the ma model, with minimum value = 1 (default).}

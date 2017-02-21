@@ -8,9 +8,9 @@
 rotate_trends = function(fitted_model) {
   # Illustrate how to get the trends out of the model
   # get the inverse of the rotation matrix
-  n_mcmc = dim(extract(fitted_model)$Z)[1]
-  Z = extract(fitted_model)$Z
-  x = extract(fitted_model)$x
+  n_mcmc = dim(rstan::extract(fitted_model)$Z)[1]
+  Z = rstan::extract(fitted_model)$Z
+  x = rstan::extract(fitted_model)$x
   n_ts = dim(Z)[2]
   n_trends = dim(x)[2]
   n_years = dim(x)[3]
@@ -18,7 +18,7 @@ rotate_trends = function(fitted_model) {
   mcmc_Z_rot = array(0, dim = c(n_mcmc, n_ts, n_trends))
   for(i in 1:n_mcmc) {
     Zest = Z[i,,]
-    H.inv = varimax(Zest)$rotmat
+    H.inv = stats::varimax(Zest)$rotmat
   
     # rotate factor loadings
     Z.rot = Zest %*% H.inv
@@ -32,6 +32,6 @@ rotate_trends = function(fitted_model) {
   return(list("Z_rot"=mcmc_Z_rot, "trends"=mcmc_trends_rot,
     "Z_rot_mean" = apply(mcmc_Z_rot,c(2,3),mean),
     "trends_mean" = apply(mcmc_trends_rot,c(2,3),mean),
-  "trends_lower" = apply(mcmc_trends_rot,c(2,3),quantile,0.025),
-"trends_upper" = apply(mcmc_trends_rot,c(2,3),quantile,0.975)))
+  "trends_lower" = apply(mcmc_trends_rot,c(2,3),stats::quantile,0.025),
+"trends_upper" = apply(mcmc_trends_rot,c(2,3),stats::quantile,0.975)))
 }

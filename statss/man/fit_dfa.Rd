@@ -23,6 +23,8 @@ fit_dfa(y = y, covar = NULL, covar_index = NULL, num_trends = 2,
 
 \item{iter}{Number of MCMC iterations, defaults to 4000.}
 
+\item{chains}{Number of MCMC chains, defaults to 1 (for DFA this is the best choice)}
+
 \item{control}{Default control list for stanfit objects.}
 }
 \value{

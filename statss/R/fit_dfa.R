@@ -7,6 +7,7 @@
 #' @param varIndx The vector indicating which time series share variances. By default, (1,2,3,...,n)
 #' @param zscore Whether or not to z-score data. Defaults to true.
 #' @param iter Number of MCMC iterations, defaults to 4000.
+#' @param chains Number of MCMC chains, defaults to 1 (for DFA this is the best choice)
 #' @param control Default control list for stanfit objects.
 #'
 #' @return an object of class 'rstan'
@@ -108,7 +109,7 @@ fit_dfa <- function(y = y,
   )
   pars <- c("x", "Z", "sigma", "log_lik", "pred")
   if(!is.null(covar)) pars = c(pars, "D")
-  mod = stan(
+  mod = rstan::stan(
     data = data_list,
     pars = pars,
     file = model[[1]],

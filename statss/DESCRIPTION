@@ -8,7 +8,8 @@ Maintainer: The package maintainer <eric.ward@noaa.gov>
 Description: Bundles univarate and multivariate STAN scripts for FISH 507 class.
 License: GPL (>=3)
 Imports:
-    rstan (>= 2.12.0)
+    rstan (>= 2.12.0), Rcpp
+Suggests: testthat, stats
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/eric-ward/safs-timeseries/STATS
