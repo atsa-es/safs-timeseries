@@ -33,4 +33,3 @@ an object of class 'rstan'
 \description{
 fit_dfa is the primary function for fitting dynamic factor analysis to time series data.
 }
-

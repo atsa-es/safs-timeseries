@@ -36,4 +36,3 @@ an object of class 'rstan'
 \description{
 fit_stan is the primary function which calls pre-written stan scripts for time series data.
 }
-

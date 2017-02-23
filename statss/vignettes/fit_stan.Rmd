@@ -1,15 +1,19 @@
 ---
-title: "Lab 3 - FISH 507"
+title: "Fitting time series models in package statss"
 author: "Eric Ward"
-date: "January 14, 2017"
-output: pdf_document
+date: "February 14, 2017"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{tvvarss}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Lab 3
+# Fitting time series models
 
 ## Installing packages
 For this lab, we'll use [Stan](http://mc-stan.org/documentation/) for estimation (the last several times this course has been taught, we used JAGS or WinBUGS). You'll need to download Stan below. Additionally, you'll need to download a package we've created for deploying these models called *statss*. This is hosted on the Github repository for the class [https://github.com/eric-ward/safs-timeseries](https://github.com/eric-ward/safs-timeseries), and you can install with *devtools*. These examples are primarily drawn from the *Stan* manual and previous code from this class.
@@ -161,26 +165,3 @@ In the two above models, we'll refer to $q$ as the standard deviation of the pro
 ss_ar = fit_stan(y = Temp, est_drift=FALSE, model_name = "ss_ar")
 ss_rw = fit_stan(y = Temp, est_drift=FALSE, model_name = "ss_rw")
 ```
-
-coef = broom::tidy(ss_ar)
-coef = coef[grep("pred", coef$term),]
-plot(1:length(Temp), coef$estimate,col="black", ylab="Fit", type="l", lwd=2, ylim = c(55,100), main="AR model", xlab="")
-lines(1:length(Temp), coef$estimate+coef$std.error)
-lines(1:length(Temp), coef$estimate-coef$std.error)
-
-coef = broom::tidy(ss_rw)
-coef = coef[grep("pred", coef$term),]
-lines(1:length(Temp), coef$estimate, col="blue", lwd=2)
-lines(1:length(Temp), coef$estimate+coef$std.error, col="blue")
-lines(1:length(Temp), coef$estimate-coef$std.error, col="blue")
-
-points(Temp, col="red")
-
-
-data(SalmonSurvCUI)
-mod = fit_stan(y = SalmonSurvCUI$logit.s, x = model.matrix(lm(SalmonSurvCUI$logit.s ~ SalmonSurvCUI$CUI.apr)), model_name="dlm")
-
-plot(mean, type="l", lwd=3, ylim=c(-9,-1), ylab="Predictions", xlab="")
-lines(lower)
-lines(upper)
-points(y,col="red")

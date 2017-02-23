@@ -15,4 +15,3 @@ a list object, with the rotated trends for each MCMC chain (trends), rotated Z f
 \description{
 rotate_trends is the primary function which calls pre-written stan scripts for time series data.
 }
-
