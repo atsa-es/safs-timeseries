@@ -1,0 +1,27 @@
+Syllabus
+
+### 1. 
+Course overview
+Properties of time series
+Data transformations
+Time series decomposition
+
+### 2. 
+Covariance & correlation
+Autocorrelation & Partial autocorrelation
+Cross correlation
+White noise
+
+### 3. 
+Random walks
+Autoregressive (AR) models
+Moving average (MA) models
+
+### 4. 
+Model estimation
+Maximum likelihood
+Bayesian estimation for this course
+
+### 5. 
+Univariate state-space models
+Diagnostics for state-space models
