@@ -1,0 +1,18 @@
+Package: safstimeseries
+Type: Package
+Title: Applied Time Series Analysis
+Version: 2.1
+Date: 2018-07-30
+Depends: R (>= 2.15.0), devtools, stringr, forecast, rmarkdown, knitr, huxtable, xaringan, MARSS
+Imports: Rdpack
+Author: Eli Holmes, NOAA, Seattle, USA
+Maintainer: Elizabeth Holmes - NOAA Federal <eli.holmes@noaa.gov>
+Description: This repo contains information related to the Applied Time Series Analysis course at the University of Washington (FISH 507). Instructors: Eli Holmes, Eric Ward, Mark Scheuerell
+License: GPL-2
+LazyData: yes
+BuildVignettes: yes
+ByteCompile: TRUE
+RdMacros: Rdpack
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1
+Remotes: github::rstudio/rmarkdown
