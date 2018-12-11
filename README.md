@@ -10,5 +10,10 @@ library(devtools)
 install_github("nwfsc-timeseries/safs-timeseries")
 ```
 
-To get the package of STAN code associated with the class, visit our repository [here](https://github.com/nwfsc-timeseries/atsar).
+To install the [package of STAN code](https://github.com/nwfsc-timeseries/atsar) associated with the class, run this code:
+
+```
+library(devtools)
+install_github("nwfsc-timeseries/atsar")
+```
 
